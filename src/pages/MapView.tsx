@@ -12,11 +12,12 @@ L.Icon.Default.mergeOptions({
 });
 
 const wasteReports = [
-  { id: 1, lat: 12.9716, lng: 77.5946, location: "MG Road, Bangalore", status: "pending" },
-  { id: 2, lat: 19.0896, lng: 72.8656, location: "Juhu Beach, Mumbai", status: "collected" },
-  { id: 3, lat: 28.6315, lng: 77.2167, location: "Connaught Place, Delhi", status: "pending" },
-  { id: 4, lat: 13.0499, lng: 80.2824, location: "Marina Beach, Chennai", status: "collected" },
-  { id: 5, lat: 12.9784, lng: 77.6408, location: "Indiranagar, Bangalore", status: "pending" },
+  { id: 1, lat: 13.0499, lng: 80.2824, location: "Marina Beach, Chennai", status: "pending" },
+  { id: 2, lat: 13.0827, lng: 80.2707, location: "T. Nagar, Chennai", status: "collected" },
+  { id: 3, lat: 13.0674, lng: 80.2376, location: "Ashok Nagar, Chennai", status: "pending" },
+  { id: 4, lat: 13.1143, lng: 80.2851, location: "Besant Nagar Beach, Chennai", status: "collected" },
+  { id: 5, lat: 13.0036, lng: 80.2557, location: "Velachery, Chennai", status: "pending" },
+  { id: 6, lat: 13.0604, lng: 80.2496, location: "Kodambakkam, Chennai", status: "pending" },
 ];
 
 export default function MapView() {
@@ -40,7 +41,7 @@ export default function MapView() {
 
       <div className="glass-card rounded-lg overflow-hidden" style={{ height: "calc(100vh - 220px)" }}>
         <MapContainer
-          center={[20.5937, 78.9629]}
+          center={[13.0627, 80.2707]}
           zoom={5}
           style={{ height: "100%", width: "100%" }}
           scrollWheelZoom={true}
