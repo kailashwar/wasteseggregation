@@ -1,5 +1,6 @@
 import { ClipboardList, CheckCircle2, MapPin, TrendingUp } from "lucide-react";
 import { StatsCard } from "@/components/StatsCard";
+import { useWaste } from "@/contexts/WasteContext";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const chartData = [
@@ -12,15 +13,11 @@ const chartData = [
   { name: "Sun", reports: 17, collected: 13 },
 ];
 
-const recentReports = [
-  { id: 1, location: "Marina Beach, Chennai", status: "pending", time: "2 min ago" },
-  { id: 2, location: "T. Nagar, Chennai", status: "collected", time: "15 min ago" },
-  { id: 3, location: "Besant Nagar Beach, Chennai", status: "pending", time: "32 min ago" },
-  { id: 4, location: "Velachery, Chennai", status: "collected", time: "1 hr ago" },
-  { id: 5, location: "Ashok Nagar, Chennai", status: "pending", time: "2 hr ago" },
-];
-
 export default function Dashboard() {
+  const { reports } = useWaste();
+  const pending = reports.filter((r) => r.status === "pending").length;
+  const collected = reports.filter((r) => r.status === "collected").length;
+
   return (
     <div className="space-y-6">
       <div>
@@ -29,9 +26,9 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard title="Total Reports" value="1,247" subtitle="this month" icon={ClipboardList} trend="+12%" />
-        <StatsCard title="Collected" value="893" subtitle="waste cleaned" icon={CheckCircle2} trend="+8%" />
-        <StatsCard title="Hotspots" value="34" subtitle="active areas" icon={MapPin} />
+        <StatsCard title="Total Reports" value={String(reports.length)} subtitle="in Chennai" icon={ClipboardList} />
+        <StatsCard title="Collected" value={String(collected)} subtitle="waste cleaned" icon={CheckCircle2} trend={`${Math.round((collected / reports.length) * 100)}%`} />
+        <StatsCard title="Pending" value={String(pending)} subtitle="awaiting pickup" icon={MapPin} />
         <StatsCard title="Impact" value="2.4T" subtitle="plastic removed" icon={TrendingUp} trend="+15%" />
       </div>
 
@@ -43,14 +40,7 @@ export default function Dashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(145 15% 88%)" />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="hsl(150 10% 45%)" />
               <YAxis tick={{ fontSize: 12 }} stroke="hsl(150 10% 45%)" />
-              <Tooltip
-                contentStyle={{
-                  background: "hsl(0 0% 100%)",
-                  border: "1px solid hsl(145 15% 88%)",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                }}
-              />
+              <Tooltip contentStyle={{ background: "hsl(0 0% 100%)", border: "1px solid hsl(145 15% 88%)", borderRadius: "8px", fontSize: "12px" }} />
               <Bar dataKey="reports" fill="hsl(145 35% 23%)" radius={[4, 4, 0, 0]} name="Reported" />
               <Bar dataKey="collected" fill="hsl(145 50% 55%)" radius={[4, 4, 0, 0]} name="Collected" />
             </BarChart>
@@ -60,19 +50,15 @@ export default function Dashboard() {
         <div className="glass-card rounded-lg p-5">
           <h3 className="font-heading font-semibold mb-4">Recent Reports</h3>
           <div className="space-y-3">
-            {recentReports.map((report) => (
+            {reports.slice(0, 5).map((report) => (
               <div key={report.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                 <div>
                   <p className="text-sm font-medium">{report.location}</p>
-                  <p className="text-xs text-muted-foreground">{report.time}</p>
+                  <p className="text-xs text-muted-foreground">{report.date}</p>
                 </div>
-                <span
-                  className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    report.status === "collected"
-                      ? "bg-success/10 text-success"
-                      : "bg-warning/10 text-warning"
-                  }`}
-                >
+                <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                  report.status === "collected" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
+                }`}>
                   {report.status}
                 </span>
               </div>

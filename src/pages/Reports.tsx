@@ -1,15 +1,10 @@
-import { CheckCircle2, Clock, MapPin } from "lucide-react";
-
-const reports = [
-  { id: 1, location: "Marina Beach, Chennai", description: "Large pile of plastic bottles near shore", status: "pending", date: "Apr 15, 2026", reporter: "Citizen" },
-  { id: 2, location: "T. Nagar, Chennai", description: "Plastic bags dumped near Pondy Bazaar", status: "collected", date: "Apr 14, 2026", reporter: "Shop Owner" },
-  { id: 3, location: "Besant Nagar Beach, Chennai", description: "Packaging waste along the promenade", status: "pending", date: "Apr 14, 2026", reporter: "Jogger" },
-  { id: 4, location: "Velachery, Chennai", description: "Construction plastic waste near lake", status: "collected", date: "Apr 13, 2026", reporter: "NGO Volunteer" },
-  { id: 5, location: "Ashok Nagar, Chennai", description: "Food packaging waste near park", status: "pending", date: "Apr 13, 2026", reporter: "Citizen" },
-  { id: 6, location: "Kodambakkam, Chennai", description: "Styrofoam and plastic cups in drain", status: "pending", date: "Apr 12, 2026", reporter: "Resident" },
-];
+import { CheckCircle2, Clock } from "lucide-react";
+import { useWaste } from "@/contexts/WasteContext";
+import { Button } from "@/components/ui/button";
 
 export default function Reports() {
+  const { reports, markCollected } = useWaste();
+
   return (
     <div className="space-y-6">
       <div>
@@ -44,6 +39,17 @@ export default function Reports() {
                 <span>by {report.reporter}</span>
               </div>
             </div>
+            {report.status === "pending" && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="shrink-0 text-xs"
+                onClick={() => markCollected(report.id)}
+              >
+                <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
+                Collect
+              </Button>
+            )}
           </div>
         ))}
       </div>
