@@ -1,12 +1,12 @@
 import { CheckCircle2, Clock, MapPin } from "lucide-react";
 
 const reports = [
-  { id: 1, location: "MG Road, Bangalore", description: "Large pile of plastic bottles near bus stop", status: "pending", date: "Apr 15, 2026", reporter: "Citizen" },
-  { id: 2, location: "Juhu Beach, Mumbai", description: "Plastic bags and packaging washed up on shore", status: "collected", date: "Apr 14, 2026", reporter: "Beach Patrol" },
-  { id: 3, location: "Connaught Place, Delhi", description: "Food packaging waste near park entrance", status: "pending", date: "Apr 14, 2026", reporter: "Citizen" },
-  { id: 4, location: "Marina Beach, Chennai", description: "Fishing nets and plastic debris", status: "collected", date: "Apr 13, 2026", reporter: "NGO Volunteer" },
-  { id: 5, location: "Indiranagar, Bangalore", description: "Construction plastic waste dumped illegally", status: "pending", date: "Apr 13, 2026", reporter: "Citizen" },
-  { id: 6, location: "Powai Lake, Mumbai", description: "Styrofoam and plastic cups floating", status: "pending", date: "Apr 12, 2026", reporter: "Jogger" },
+  { id: 1, location: "Marina Beach, Chennai", description: "Large pile of plastic bottles near shore", status: "pending", date: "Apr 15, 2026", reporter: "Citizen" },
+  { id: 2, location: "T. Nagar, Chennai", description: "Plastic bags dumped near Pondy Bazaar", status: "collected", date: "Apr 14, 2026", reporter: "Shop Owner" },
+  { id: 3, location: "Besant Nagar Beach, Chennai", description: "Packaging waste along the promenade", status: "pending", date: "Apr 14, 2026", reporter: "Jogger" },
+  { id: 4, location: "Velachery, Chennai", description: "Construction plastic waste near lake", status: "collected", date: "Apr 13, 2026", reporter: "NGO Volunteer" },
+  { id: 5, location: "Ashok Nagar, Chennai", description: "Food packaging waste near park", status: "pending", date: "Apr 13, 2026", reporter: "Citizen" },
+  { id: 6, location: "Kodambakkam, Chennai", description: "Styrofoam and plastic cups in drain", status: "pending", date: "Apr 12, 2026", reporter: "Resident" },
 ];
 
 export default function Reports() {
