@@ -26,7 +26,7 @@ export default function MapView() {
       <div>
         <h2 className="text-2xl font-heading font-bold">Waste Map</h2>
         <p className="text-muted-foreground text-sm mt-1">
-          View reported plastic waste locations across India
+          View reported plastic waste locations across Chennai
         </p>
       </div>
 
@@ -42,7 +42,7 @@ export default function MapView() {
       <div className="glass-card rounded-lg overflow-hidden" style={{ height: "calc(100vh - 220px)" }}>
         <MapContainer
           center={[13.0627, 80.2707]}
-          zoom={5}
+          zoom={12}
           style={{ height: "100%", width: "100%" }}
           scrollWheelZoom={true}
         >
