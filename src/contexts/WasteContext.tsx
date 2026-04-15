@@ -9,6 +9,7 @@ export interface WasteReport {
   status: "pending" | "collected";
   date: string;
   reporter: string;
+  photo?: string;
 }
 
 const initialReports: WasteReport[] = [

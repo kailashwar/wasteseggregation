@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,20 +17,22 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 function AppContent() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   if (!isLoggedIn) {
     return <Login />;
   }
 
+  const isAdmin = user?.role === "admin";
+
   return (
     <DashboardLayout>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={isAdmin ? <Dashboard /> : <Navigate to="/report" replace />} />
         <Route path="/map" element={<MapView />} />
         <Route path="/report" element={<ReportWaste />} />
         <Route path="/reports" element={<Reports />} />
-        <Route path="/analytics" element={<Analytics />} />
+        {isAdmin && <Route path="/analytics" element={<Analytics />} />}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </DashboardLayout>
