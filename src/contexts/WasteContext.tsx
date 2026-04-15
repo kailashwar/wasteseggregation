@@ -11,8 +11,6 @@ export interface WasteReport {
   reporter: string;
   photo?: string;
 }
-  reporter: string;
-}
 
 const initialReports: WasteReport[] = [
   { id: 1, lat: 13.0499, lng: 80.2824, location: "Marina Beach, Chennai", description: "Large pile of plastic bottles near shore", status: "pending", date: "Apr 15, 2026", reporter: "Citizen" },
