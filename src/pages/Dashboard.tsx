@@ -13,11 +13,11 @@ const chartData = [
 ];
 
 const recentReports = [
-  { id: 1, location: "MG Road, Bangalore", status: "pending", time: "2 min ago" },
-  { id: 2, location: "Juhu Beach, Mumbai", status: "collected", time: "15 min ago" },
-  { id: 3, location: "Connaught Place, Delhi", status: "pending", time: "32 min ago" },
-  { id: 4, location: "Marina Beach, Chennai", status: "collected", time: "1 hr ago" },
-  { id: 5, location: "Indiranagar, Bangalore", status: "pending", time: "2 hr ago" },
+  { id: 1, location: "Marina Beach, Chennai", status: "pending", time: "2 min ago" },
+  { id: 2, location: "T. Nagar, Chennai", status: "collected", time: "15 min ago" },
+  { id: 3, location: "Besant Nagar Beach, Chennai", status: "pending", time: "32 min ago" },
+  { id: 4, location: "Velachery, Chennai", status: "collected", time: "1 hr ago" },
+  { id: 5, location: "Ashok Nagar, Chennai", status: "pending", time: "2 hr ago" },
 ];
 
 export default function Dashboard() {
