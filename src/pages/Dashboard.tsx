@@ -1,48 +1,65 @@
 import { ClipboardList, CheckCircle2, MapPin, TrendingUp } from "lucide-react";
 import { StatsCard } from "@/components/StatsCard";
-import { useWaste } from "@/contexts/WasteContext";
+import { useReports } from "@/hooks/useReports";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-
-const chartData = [
-  { name: "Mon", reports: 12, collected: 8 },
-  { name: "Tue", reports: 19, collected: 14 },
-  { name: "Wed", reports: 8, collected: 7 },
-  { name: "Thu", reports: 15, collected: 11 },
-  { name: "Fri", reports: 22, collected: 18 },
-  { name: "Sat", reports: 30, collected: 22 },
-  { name: "Sun", reports: 17, collected: 13 },
-];
+import { useMemo } from "react";
 
 export default function Dashboard() {
-  const { reports } = useWaste();
+  const { reports } = useReports();
+
   const pending = reports.filter((r) => r.status === "pending").length;
-  const collected = reports.filter((r) => r.status === "collected").length;
+  const inProgress = reports.filter((r) => r.status === "in_progress").length;
+  const completed = reports.filter((r) => r.status === "completed").length;
+  const total = reports.length;
+  const completionRate = total ? Math.round((completed / total) * 100) : 0;
+
+  // Last 7 days activity
+  const chartData = useMemo(() => {
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      d.setHours(0, 0, 0, 0);
+      return d;
+    });
+    return days.map((d) => {
+      const dayKey = d.toDateString();
+      const reported = reports.filter((r) => new Date(r.created_at).toDateString() === dayKey).length;
+      const done = reports.filter(
+        (r) => new Date(r.updated_at).toDateString() === dayKey && r.status === "completed"
+      ).length;
+      return {
+        name: d.toLocaleDateString(undefined, { weekday: "short" }),
+        reported,
+        completed: done,
+      };
+    });
+  }, [reports]);
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-heading font-bold">Dashboard</h2>
-        <p className="text-muted-foreground text-sm mt-1">Overview of plastic waste reports and cleanup progress</p>
+        <p className="text-muted-foreground text-sm mt-1">Overview of garbage reports and cleanup progress</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard title="Total Reports" value={String(reports.length)} subtitle="in Chennai" icon={ClipboardList} />
-        <StatsCard title="Collected" value={String(collected)} subtitle="waste cleaned" icon={CheckCircle2} trend={`${Math.round((collected / reports.length) * 100)}%`} />
-        <StatsCard title="Pending" value={String(pending)} subtitle="awaiting pickup" icon={MapPin} />
-        <StatsCard title="Impact" value="2.4T" subtitle="plastic removed" icon={TrendingUp} trend="+15%" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatsCard title="Total Reports" value={String(total)} subtitle="all time" icon={ClipboardList} />
+        <StatsCard title="Completed" value={String(completed)} subtitle="cleaned up" icon={CheckCircle2} trend={`${completionRate}%`} />
+        <StatsCard title="Pending" value={String(pending)} subtitle="awaiting action" icon={MapPin} />
+        <StatsCard title="In Progress" value={String(inProgress)} subtitle="being handled" icon={TrendingUp} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 glass-card rounded-lg p-5">
-          <h3 className="font-heading font-semibold mb-4">Weekly Activity</h3>
+          <h3 className="font-heading font-semibold mb-4">Last 7 Days</h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(145 15% 88%)" />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="hsl(150 10% 45%)" />
-              <YAxis tick={{ fontSize: 12 }} stroke="hsl(150 10% 45%)" />
+              <YAxis tick={{ fontSize: 12 }} stroke="hsl(150 10% 45%)" allowDecimals={false} />
               <Tooltip contentStyle={{ background: "hsl(0 0% 100%)", border: "1px solid hsl(145 15% 88%)", borderRadius: "8px", fontSize: "12px" }} />
-              <Bar dataKey="reports" fill="hsl(145 35% 23%)" radius={[4, 4, 0, 0]} name="Reported" />
-              <Bar dataKey="collected" fill="hsl(145 50% 55%)" radius={[4, 4, 0, 0]} name="Collected" />
+              <Bar dataKey="reported" fill="hsl(145 35% 23%)" radius={[4, 4, 0, 0]} name="Reported" />
+              <Bar dataKey="completed" fill="hsl(145 50% 55%)" radius={[4, 4, 0, 0]} name="Completed" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -50,16 +67,21 @@ export default function Dashboard() {
         <div className="glass-card rounded-lg p-5">
           <h3 className="font-heading font-semibold mb-4">Recent Reports</h3>
           <div className="space-y-3">
-            {reports.slice(0, 5).map((report) => (
-              <div key={report.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
-                <div>
-                  <p className="text-sm font-medium">{report.location}</p>
-                  <p className="text-xs text-muted-foreground">{report.date}</p>
+            {reports.length === 0 && <p className="text-sm text-muted-foreground">No reports yet.</p>}
+            {reports.slice(0, 5).map((r) => (
+              <div key={r.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium truncate">{r.location_name ?? "Reported location"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(r.created_at).toLocaleDateString()}
+                  </p>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                  report.status === "collected" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
+                <span className={`text-xs px-2 py-1 rounded-full font-medium shrink-0 ${
+                  r.status === "completed" ? "bg-success/10 text-success" :
+                  r.status === "in_progress" ? "bg-primary/10 text-primary" :
+                  "bg-warning/10 text-warning"
                 }`}>
-                  {report.status}
+                  {r.status.replace("_", " ")}
                 </span>
               </div>
             ))}
