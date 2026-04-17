@@ -1,4 +1,4 @@
-import { LayoutDashboard, MapPin, Camera, ClipboardList, BarChart3, Leaf, LogOut, User } from "lucide-react";
+import { LayoutDashboard, MapPin, Camera, ClipboardList, BarChart3, Shield, LogOut, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -24,7 +24,7 @@ const adminItems = [
 ];
 
 const userItems = [
-  { title: "Report Waste", url: "/report", icon: Camera },
+  { title: "Report Garbage", url: "/report", icon: Camera },
   { title: "Map View", url: "/map", icon: MapPin },
   { title: "My Reports", url: "/reports", icon: ClipboardList },
 ];
@@ -33,29 +33,29 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
-  const { logout, user } = useAuth();
+  const { signOut, role, username } = useAuth();
   const currentPath = location.pathname;
   const isActive = (path: string) => currentPath === path;
 
-  const items = user?.role === "admin" ? adminItems : userItems;
+  const items = role === "admin" ? adminItems : userItems;
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary/20">
-            <Leaf className="h-5 w-5 text-sidebar-primary" />
+            <Shield className="h-5 w-5 text-sidebar-primary" />
           </div>
           {!collapsed && (
             <span className="font-heading text-lg font-bold text-sidebar-foreground">
-              PlasticTrack
+              Smart Gate
             </span>
           )}
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{user?.role === "admin" ? "Admin" : "Menu"}</SidebarGroupLabel>
+          <SidebarGroupLabel>{role === "admin" ? "Admin" : "Menu"}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -81,11 +81,11 @@ export function AppSidebar() {
         {!collapsed && (
           <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-sidebar-foreground/60">
             <User className="h-3.5 w-3.5" />
-            <span>{user?.username} ({user?.role})</span>
+            <span className="truncate">{username ?? "User"} ({role ?? "user"})</span>
           </div>
         )}
         <button
-          onClick={logout}
+          onClick={() => signOut()}
           className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
         >
           <LogOut className="h-4 w-4" />
