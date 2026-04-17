@@ -3,17 +3,21 @@ import { Camera, MapPin, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useWaste } from "@/contexts/WasteContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const descriptionSchema = z.string().trim().max(500);
 
 export default function ReportWaste() {
   const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationName, setLocationName] = useState("");
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
-  const { addReport } = useWaste();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -26,39 +30,42 @@ export default function ReportWaste() {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          setLocationName(`${pos.coords.latitude.toFixed(4)}°N, ${pos.coords.longitude.toFixed(4)}°E`);
+          setLocationName(`${pos.coords.latitude.toFixed(4)}°, ${pos.coords.longitude.toFixed(4)}°`);
           setLoadingLocation(false);
         },
         () => {
-          // Fallback to Chennai center if GPS denied
           setLocation({ lat: 13.0627, lng: 80.2707 });
-          setLocationName("Chennai (default)");
+          setLocationName("Default location");
           setLoadingLocation(false);
         }
       );
     } else {
       setLocation({ lat: 13.0627, lng: 80.2707 });
-      setLocationName("Chennai (default)");
+      setLocationName("Default location");
       setLoadingLocation(false);
     }
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast({ title: "File too large", description: "Please upload an image under 5MB", variant: "destructive" });
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => setPhoto(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please upload an image under 5MB", variant: "destructive" });
+      return;
     }
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please upload an image", variant: "destructive" });
+      return;
+    }
+    setPhotoFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setPhotoPreview(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
-  const handleSubmit = () => {
-    if (!photo) {
-      toast({ title: "Photo required", description: "Please upload a photo of the waste", variant: "destructive" });
+  const handleSubmit = async () => {
+    if (!photoFile || !user) {
+      toast({ title: "Photo required", description: "Please upload a photo of the garbage", variant: "destructive" });
       return;
     }
     if (!location) {
@@ -66,43 +73,70 @@ export default function ReportWaste() {
       return;
     }
 
-    addReport({
-      lat: location.lat,
-      lng: location.lng,
-      location: locationName || "Chennai",
-      description: description || "Plastic waste reported",
-      status: "pending",
-      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      reporter: user?.username || "Citizen",
-      photo: photo,
-    });
+    const descParsed = descriptionSchema.safeParse(description);
+    if (!descParsed.success) {
+      toast({ title: "Invalid description", description: descParsed.error.issues[0].message, variant: "destructive" });
+      return;
+    }
 
-    toast({
-      title: "Report Submitted! 🌱",
-      description: "Thank you for helping track plastic waste in Chennai.",
-    });
-    setDescription("");
-    setPhoto(null);
+    setSubmitting(true);
+    try {
+      // Upload photo
+      const ext = photoFile.name.split(".").pop() || "jpg";
+      const filePath = `${user.id}/${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("report-photos")
+        .upload(filePath, photoFile, { contentType: photoFile.type });
+      if (upErr) throw upErr;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("report-photos")
+        .getPublicUrl(filePath);
+
+      // Insert report
+      const { error: insErr } = await supabase.from("reports").insert({
+        user_id: user.id,
+        photo_url: publicUrl,
+        lat: location.lat,
+        lng: location.lng,
+        location_name: locationName || null,
+        description: descParsed.data || null,
+      });
+      if (insErr) throw insErr;
+
+      toast({
+        title: "Report submitted! 🌱",
+        description: "Thanks for helping keep streets clean.",
+      });
+      setDescription("");
+      setPhotoFile(null);
+      setPhotoPreview(null);
+    } catch (e: any) {
+      console.error(e);
+      toast({ title: "Submission failed", description: e.message ?? "Try again", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div>
-        <h2 className="text-2xl font-heading font-bold">Report Waste</h2>
+        <h2 className="text-2xl font-heading font-bold">Report Garbage</h2>
         <p className="text-muted-foreground text-sm mt-1">
-          Snap a photo of plastic waste and help us track pollution in Chennai
+          Snap a photo and help keep your streets clean
         </p>
       </div>
 
       <div className="glass-card rounded-lg p-6 space-y-5">
-        {/* Photo upload */}
         <div>
           <label className="text-sm font-medium mb-2 block">Photo *</label>
-          {photo ? (
+          {photoPreview ? (
             <div className="relative rounded-lg overflow-hidden">
-              <img src={photo} alt="Waste report" className="w-full h-48 object-cover rounded-lg" />
+              <img src={photoPreview} alt="Garbage report preview" className="w-full h-48 object-cover rounded-lg" />
               <button
-                onClick={() => setPhoto(null)}
+                type="button"
+                onClick={() => { setPhotoFile(null); setPhotoPreview(null); }}
                 className="absolute top-2 right-2 bg-foreground/70 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs"
               >
                 ✕
@@ -117,7 +151,6 @@ export default function ReportWaste() {
           )}
         </div>
 
-        {/* Location */}
         <div>
           <label className="text-sm font-medium mb-2 block">Location</label>
           <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary text-sm">
@@ -134,17 +167,16 @@ export default function ReportWaste() {
             )}
           </div>
           {!loadingLocation && (
-            <button onClick={captureLocation} className="text-xs text-primary mt-1 hover:underline">
+            <button type="button" onClick={captureLocation} className="text-xs text-primary mt-1 hover:underline">
               Refresh location
             </button>
           )}
         </div>
 
-        {/* Description */}
         <div>
           <label className="text-sm font-medium mb-2 block">Description (optional)</label>
           <Textarea
-            placeholder="Describe the waste you found..."
+            placeholder="Describe what you found..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="resize-none"
@@ -153,8 +185,8 @@ export default function ReportWaste() {
           />
         </div>
 
-        <Button onClick={handleSubmit} className="w-full" size="lg" disabled={!photo || loadingLocation}>
-          <Upload className="h-4 w-4 mr-2" />
+        <Button onClick={handleSubmit} className="w-full" size="lg" disabled={!photoFile || loadingLocation || submitting}>
+          {submitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
           Submit Report
         </Button>
       </div>
