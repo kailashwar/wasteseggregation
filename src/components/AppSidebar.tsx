@@ -24,9 +24,11 @@ const adminItems = [
 ];
 
 const userItems = [
+  { title: "Home", url: "/", icon: LayoutDashboard },
   { title: "Report Garbage", url: "/report", icon: Camera },
   { title: "Map View", url: "/map", icon: MapPin },
   { title: "My Reports", url: "/reports", icon: ClipboardList },
+  { title: "My Credits", url: "/credits", icon: QrCode },
 ];
 
 export function AppSidebar() {
