@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Shield, LogIn, UserPlus, Loader2 } from "lucide-react";
+import { Recycle, LogIn, UserPlus, Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const signInSchema = z.object({
@@ -49,9 +49,9 @@ export default function Auth() {
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-3">
           <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Shield className="h-8 w-8 text-primary" />
+            <Recycle className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-heading font-bold">Smart Gate</h1>
+          <h1 className="text-2xl font-heading font-bold">Plastic Spotter</h1>
           <p className="text-sm text-muted-foreground text-center">
             {isSignup ? "Create an account to report street garbage" : "Login to manage cleanup reports"}
           </p>
