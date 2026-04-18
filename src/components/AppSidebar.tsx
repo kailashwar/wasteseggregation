@@ -44,11 +44,11 @@ export function AppSidebar() {
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary/20">
-            <Shield className="h-5 w-5 text-sidebar-primary" />
+            <Recycle className="h-5 w-5 text-sidebar-primary" />
           </div>
           {!collapsed && (
             <span className="font-heading text-lg font-bold text-sidebar-foreground">
-              Smart Gate
+              Plastic Spotter
             </span>
           )}
         </div>
