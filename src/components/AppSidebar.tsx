@@ -1,4 +1,4 @@
-import { LayoutDashboard, MapPin, Camera, ClipboardList, BarChart3, Shield, LogOut, User } from "lucide-react";
+import { LayoutDashboard, MapPin, Camera, ClipboardList, BarChart3, Recycle, LogOut, User, QrCode } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
