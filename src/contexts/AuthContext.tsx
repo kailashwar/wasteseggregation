@@ -9,10 +9,13 @@ interface AuthContextType {
   session: Session | null;
   role: AppRole | null;
   username: string | null;
+  credits: number;
+  photoCount: number;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<string | null>;
   signUp: (email: string, password: string, username: string) => Promise<string | null>;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
