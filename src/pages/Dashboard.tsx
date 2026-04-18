@@ -3,6 +3,7 @@ import { StatsCard } from "@/components/StatsCard";
 import { useReports } from "@/hooks/useReports";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useMemo } from "react";
+import { HomeBio } from "@/components/HomeBio";
 
 export default function Dashboard() {
   const { reports } = useReports();
@@ -88,6 +89,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      <HomeBio />
     </div>
   );
 }
