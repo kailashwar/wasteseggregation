@@ -45,19 +45,24 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="w-full max-w-sm space-y-6">
+    <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-primary via-accent to-success">
+      {/* Decorative blobs */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-warning/40 blur-3xl animate-pulse" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-primary/50 blur-3xl animate-pulse" />
+      <div className="pointer-events-none absolute top-1/3 right-1/4 h-56 w-56 rounded-full bg-accent/40 blur-3xl" />
+
+      <div className="relative w-full max-w-sm space-y-6 animate-fade-in">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Recycle className="h-8 w-8 text-primary" />
+          <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md ring-1 ring-white/40 flex items-center justify-center shadow-lg">
+            <Recycle className="h-9 w-9 text-white" />
           </div>
-          <h1 className="text-2xl font-heading font-bold">Plastic Spotter</h1>
-          <p className="text-sm text-muted-foreground text-center">
+          <h1 className="text-3xl font-heading font-bold text-white drop-shadow">Plastic Spotter</h1>
+          <p className="text-sm text-white/90 text-center">
             {isSignup ? "Create an account to report street garbage" : "Login to manage cleanup reports"}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass-card rounded-lg p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4 bg-card/95 backdrop-blur-xl border border-white/30 shadow-2xl">
           {isSignup && (
             <div>
               <label className="text-sm font-medium mb-1.5 block">Username</label>
