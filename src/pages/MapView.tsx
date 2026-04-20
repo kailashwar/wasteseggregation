@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useReports } from "@/hooks/useReports";
+import { useReports, type ReportPriority } from "@/hooks/useReports";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 
@@ -16,6 +17,34 @@ const STATUS_LABEL: Record<string, string> = {
   pending: "Pending",
   in_progress: "In Progress",
   completed: "Completed",
+};
+
+const PRIORITY_META: Record<ReportPriority, { label: string; color: string; rank: number }> = {
+  high: { label: "Red — High", color: "#ef4444", rank: 0 },
+  medium: { label: "Yellow — Medium", color: "#eab308", rank: 1 },
+  low: { label: "Green — Low", color: "#22c55e", rank: 2 },
+};
+
+const buildPriorityIcon = (color: string) =>
+  L.divIcon({
+    className: "priority-marker",
+    html: `<div style="
+      width: 28px; height: 28px; border-radius: 50%;
+      background: ${color};
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: bold; font-size: 14px;
+    ">!</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14],
+  });
+
+const PRIORITY_ICONS: Record<ReportPriority, L.DivIcon> = {
+  high: buildPriorityIcon(PRIORITY_META.high.color),
+  medium: buildPriorityIcon(PRIORITY_META.medium.color),
+  low: buildPriorityIcon(PRIORITY_META.low.color),
 };
 
 export default function MapView() {
