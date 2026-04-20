@@ -185,13 +185,16 @@ export default function ReportWaste() {
         <div>
           <label className="text-sm font-medium mb-2 block">Description (optional)</label>
           <Textarea
-            placeholder="Describe what you found..."
+            placeholder="Describe what you found... (mention 'plastic' for 🔴 high priority)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="resize-none"
             rows={3}
             maxLength={500}
           />
+          <p className="text-xs text-muted-foreground mt-1">
+            Tip: Words like <span className="text-destructive font-medium">plastic, hazard, toxic, large</span> auto-flag as 🔴 Red (High).
+          </p>
         </div>
 
         <Button onClick={handleSubmit} className="w-full" size="lg" disabled={!photoFile || loadingLocation || submitting}>
