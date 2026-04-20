@@ -93,6 +93,14 @@ export default function ReportWaste() {
         .from("report-photos")
         .getPublicUrl(filePath);
 
+      // Auto-detect priority from description keywords
+      const desc = (descParsed.data || "").toLowerCase();
+      const highKeywords = ["plastic", "hazard", "toxic", "medical", "biohazard", "chemical", "large", "huge", "overflow"];
+      const lowKeywords = ["small", "minor", "little", "tiny"];
+      let priority: "low" | "medium" | "high" = "medium";
+      if (highKeywords.some((k) => desc.includes(k))) priority = "high";
+      else if (lowKeywords.some((k) => desc.includes(k))) priority = "low";
+
       // Insert report
       const { error: insErr } = await supabase.from("reports").insert({
         user_id: user.id,
@@ -101,6 +109,7 @@ export default function ReportWaste() {
         lng: location.lng,
         location_name: locationName || null,
         description: descParsed.data || null,
+        priority,
       });
       if (insErr) throw insErr;
 
