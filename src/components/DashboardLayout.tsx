@@ -1,5 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { HelpChat } from "@/components/HelpChat";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
