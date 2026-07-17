@@ -154,8 +154,16 @@ export default function ReportWaste() {
           ) : (
             <label className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
               <Camera className="h-8 w-8 text-muted-foreground mb-2" />
-              <span className="text-sm text-muted-foreground">Click to take or upload a photo</span>
-              <input type="file" accept="image/*" capture="environment" onChange={handlePhotoUpload} className="hidden" />
+              <span className="text-sm text-muted-foreground">Tap to open camera and capture a live photo</span>
+              <span className="text-xs text-muted-foreground/70 mt-1">Gallery uploads are disabled</span>
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handlePhotoUpload}
+                onClick={(e) => { (e.target as HTMLInputElement).value = ""; }}
+                className="hidden"
+              />
             </label>
           )}
         </div>
