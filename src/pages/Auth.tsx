@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Recycle, LogIn, UserPlus, Loader2 } from "lucide-react";
 import { z } from "zod";
+import cleanIndiaBg from "@/assets/clean-india-bg.png.asset.json";
 
 const signInSchema = z.object({
   email: z.string().trim().email({ message: "Enter a valid email" }).max(255),
