@@ -22,12 +22,12 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
       <div className="relative w-full max-w-3xl px-6">
         <img
           src={whiteDevils}
-          alt="White Devils — Plastic Spotter"
+          alt="White Devils — Plastic Waste Segregation"
           className="w-full rounded-xl shadow-[0_0_80px_rgba(56,189,248,0.4)]"
         />
         <div className="mt-8 text-center">
           <h1 className="font-heading text-3xl font-bold tracking-wide text-white">
-            Plastic Spotter
+            Plastic Waste Segregation
           </h1>
           <p className="mt-2 text-sm text-sky-300/80">Loading your clean-up dashboard…</p>
         </div>

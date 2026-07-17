@@ -50,7 +50,7 @@ export function AppSidebar() {
           </div>
           {!collapsed && (
             <span className="font-heading text-lg font-bold text-sidebar-foreground">
-              Plastic Spotter
+              Plastic Waste Segregation
             </span>
           )}
         </div>

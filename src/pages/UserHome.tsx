@@ -23,7 +23,7 @@ export default function UserHome() {
           Hi {username ?? "friend"} 👋
         </h2>
         <p className="text-muted-foreground text-sm mt-1">
-          Welcome back to Plastic Spotter — let's keep the streets a little cleaner today.
+          Welcome back to Plastic Waste Segregation — let's keep the streets a little cleaner today.
         </p>
       </div>
 
