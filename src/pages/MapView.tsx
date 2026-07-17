@@ -81,17 +81,6 @@ export default function MapView() {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <span className="text-xs px-3 py-1.5 rounded-full bg-destructive/10 text-destructive font-medium">
-          🔴 Red (High): {counts.high}
-        </span>
-        <span className="text-xs px-3 py-1.5 rounded-full bg-warning/10 text-warning font-medium">
-          🟡 Yellow (Medium): {counts.medium}
-        </span>
-        <span className="text-xs px-3 py-1.5 rounded-full bg-success/10 text-success font-medium">
-          🟢 Green (Low): {counts.low}
-        </span>
-      </div>
 
       <div className="glass-card rounded-lg overflow-hidden relative" style={{ height: "calc(100vh - 240px)", minHeight: 400 }}>
         {loading && (
