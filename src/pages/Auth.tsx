@@ -46,7 +46,12 @@ export default function Auth() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-primary via-accent to-success">
+    <div
+      className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: `url(${cleanIndiaBg.url})` }}
+    >
+      {/* Overlay for readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-accent/60 to-success/70 backdrop-blur-[2px]" />
       {/* Decorative blobs */}
       <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-warning/40 blur-3xl animate-pulse" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-primary/50 blur-3xl animate-pulse" />
