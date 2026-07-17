@@ -10,7 +10,7 @@ export function HomeBio() {
         </span>
       </div>
       <h3 className="font-heading text-xl md:text-2xl font-semibold leading-snug">
-        Welcome to Plastic Waste Segregation — small snaps, big change. 🌱
+        Welcome to Waste Segregation — small snaps, big change. 🌱
       </h3>
       <p className="mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
         Every photo you share is a kind hand reaching out to your neighborhood. Together

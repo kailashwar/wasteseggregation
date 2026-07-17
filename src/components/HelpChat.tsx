@@ -77,7 +77,7 @@ export function HelpChat() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "bot", text: "Hi! I'm your Plastic Waste Segregation assistant. Ask me anything, or pick a quick question below." },
+    { role: "bot", text: "Hi! I'm your Waste Segregation assistant. Ask me anything, or pick a quick question below." },
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -106,7 +106,7 @@ export function HelpChat() {
         <div className="fixed bottom-24 right-5 z-[1000] w-[92vw] max-w-sm h-[70vh] max-h-[520px] rounded-2xl border bg-background shadow-2xl flex flex-col overflow-hidden">
           <div className="px-4 py-3 border-b bg-primary/10">
             <p className="font-heading font-semibold text-sm">Help & FAQ</p>
-            <p className="text-xs text-muted-foreground">Plastic Waste Segregation assistant</p>
+            <p className="text-xs text-muted-foreground">Waste Segregation assistant</p>
           </div>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-2">

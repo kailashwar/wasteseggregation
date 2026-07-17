@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Recycle, LogIn, UserPlus, Loader2 } from "lucide-react";
 import { z } from "zod";
+import cleanIndiaBg from "@/assets/clean-india-bg.png.asset.json";
 
 const signInSchema = z.object({
   email: z.string().trim().email({ message: "Enter a valid email" }).max(255),
@@ -45,7 +46,12 @@ export default function Auth() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-primary via-accent to-success">
+    <div
+      className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: `url(${cleanIndiaBg.url})` }}
+    >
+      {/* Overlay for readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-accent/60 to-success/70 backdrop-blur-[2px]" />
       {/* Decorative blobs */}
       <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-warning/40 blur-3xl animate-pulse" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-primary/50 blur-3xl animate-pulse" />
@@ -56,7 +62,7 @@ export default function Auth() {
           <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md ring-1 ring-white/40 flex items-center justify-center shadow-lg">
             <Recycle className="h-9 w-9 text-white" />
           </div>
-          <h1 className="text-3xl font-heading font-bold text-white drop-shadow">Plastic Waste Segregation</h1>
+          <h1 className="text-3xl font-heading font-bold text-white drop-shadow">Waste Segregation</h1>
           <p className="text-sm text-white/90 text-center">
             {isSignup ? "Create an account to report street garbage" : "Login to manage cleanup reports"}
           </p>
