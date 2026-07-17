@@ -56,7 +56,7 @@ export default function Auth() {
           <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md ring-1 ring-white/40 flex items-center justify-center shadow-lg">
             <Recycle className="h-9 w-9 text-white" />
           </div>
-          <h1 className="text-3xl font-heading font-bold text-white drop-shadow">Plastic Waste Segregation</h1>
+          <h1 className="text-3xl font-heading font-bold text-white drop-shadow">Waste Segregation</h1>
           <p className="text-sm text-white/90 text-center">
             {isSignup ? "Create an account to report street garbage" : "Login to manage cleanup reports"}
           </p>
