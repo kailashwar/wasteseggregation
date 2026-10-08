@@ -1,0 +1,4 @@
+- [ ] Add validated phone, UPI ID, and address to sign-up without changing sign-in.
+- [ ] Add consent-based device location detection and an adjustable Google Map location picker.
+- [ ] Securely persist signup contact/location details with owner-only database access.
+- [ ] Verify form behavior, validation, responsive layout, and build; note the Google Maps live-test limitation.
