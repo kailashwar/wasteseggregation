@@ -83,6 +83,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_contact_details: {
+        Row: {
+          address: string
+          created_at: string
+          latitude: number | null
+          location_label: string
+          longitude: number | null
+          phone_number: string
+          updated_at: string
+          upi_id: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          latitude?: number | null
+          location_label: string
+          longitude?: number | null
+          phone_number: string
+          updated_at?: string
+          upi_id: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          latitude?: number | null
+          location_label?: string
+          longitude?: number | null
+          phone_number?: string
+          updated_at?: string
+          upi_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

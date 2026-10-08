@@ -1,0 +1,1 @@
+- Store signup contact and location details in a dedicated owner-protected table rather than the shared profiles table, because these fields are personal information.
