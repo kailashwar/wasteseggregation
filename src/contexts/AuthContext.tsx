@@ -13,7 +13,7 @@ interface AuthContextType {
   photoCount: number;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<string | null>;
-  signUp: (email: string, password: string, username: string) => Promise<string | null>;
+  signUp: (email: string, password: string, username: string, details?: Record<string, unknown>) => Promise<string | null>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -94,13 +94,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return error?.message ?? null;
   };
 
-  const signUp = async (email: string, password: string, uname: string): Promise<string | null> => {
+  const signUp = async (email: string, password: string, uname: string, details?: Record<string, unknown>): Promise<string | null> => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/`,
-        data: { username: uname },
+        data: { username: uname, ...(details ?? {}) },
       },
     });
     return error?.message ?? null;
