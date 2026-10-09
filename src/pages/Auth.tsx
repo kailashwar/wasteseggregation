@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
-import { Shield, Lock, LogIn, UserPlus, Loader2, Mail, User, KeyRound, Sparkles, Fingerprint } from "lucide-react";
+import { Shield, Lock, LogIn, UserPlus, Loader2, Mail, User, KeyRound, Sparkles, Fingerprint, Phone, Wallet, Home, MapPin } from "lucide-react";
 import { z } from "zod";
+import { LocationPicker } from "@/components/LocationPicker";
 
 const signInSchema = z.object({
   email: z.string().trim().email({ message: "Enter a valid email" }).max(255),
@@ -11,6 +12,10 @@ const signInSchema = z.object({
 });
 const signUpSchema = signInSchema.extend({
   username: z.string().trim().min(2, { message: "Username must be at least 2 characters" }).max(50),
+  phone: z.string().trim().transform((v) => v.replace(/[\s-]/g, "")).pipe(z.string().regex(/^(\+91)?[6-9]\d{9}$/, { message: "Enter a valid 10-digit mobile number" })),
+  upi: z.string().trim().regex(/^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/, { message: "Enter a valid UPI ID (e.g. name@bank)" }),
+  address: z.string().trim().min(10, { message: "Address must be at least 10 characters" }).max(300),
+  locationLabel: z.string().trim().min(2, { message: "Enter a location or landmark" }).max(200),
 });
 
 export default function Auth() {
@@ -18,6 +23,10 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
+  const [upi, setUpi] = useState("");
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState<{ label: string; latitude: number | null; longitude: number | null }>({ label: "", latitude: null, longitude: null });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { signIn, signUp } = useAuth();
@@ -56,11 +65,22 @@ export default function Auth() {
     e.preventDefault();
     setError("");
     const parsed = isSignup
-      ? signUpSchema.safeParse({ email, password, username })
+      ? signUpSchema.safeParse({ email, password, username, phone, upi, address, locationLabel: location.label })
       : signInSchema.safeParse({ email, password });
     if (!parsed.success) return setError(parsed.error.issues[0].message);
+    if (isSignup && (location.latitude === null || location.longitude === null))
+      return setError("Use your current location or tap the map to set your location");
     setSubmitting(true);
-    const err = isSignup ? await signUp(email, password, username) : await signIn(email, password);
+    const err = isSignup
+      ? await signUp(email, password, username, {
+          phone_number: phone.replace(/[\s-]/g, ""),
+          upi_id: upi.trim(),
+          address: address.trim(),
+          location_label: location.label.trim(),
+          latitude: location.latitude,
+          longitude: location.longitude,
+        })
+      : await signIn(email, password);
     setSubmitting(false);
     if (err) setError(err);
   };
@@ -250,7 +270,14 @@ export default function Auth() {
                     exit={{ opacity: 0, height: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <FloatField id="username" label="Username" icon={<User className="h-4 w-4" />} value={username} onChange={setUsername} maxLength={50} />
+                    <div className="space-y-4">
+                      <FloatField id="username" label="Username" icon={<User className="h-4 w-4" />} value={username} onChange={setUsername} maxLength={50} />
+                      <FloatField id="phone" label="Phone Number" type="tel" icon={<Phone className="h-4 w-4" />} value={phone} onChange={setPhone} maxLength={15} />
+                      <FloatField id="upi" label="UPI ID (e.g. name@bank)" icon={<Wallet className="h-4 w-4" />} value={upi} onChange={setUpi} maxLength={60} />
+                      <FloatField id="address" label="Address" icon={<Home className="h-4 w-4" />} value={address} onChange={setAddress} maxLength={300} />
+                      <FloatField id="locationLabel" label="Location / Landmark" icon={<MapPin className="h-4 w-4" />} value={location.label} onChange={(v) => setLocation({ ...location, label: v })} maxLength={200} />
+                      <LocationPicker value={location} onChange={setLocation} />
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
